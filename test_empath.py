@@ -50,19 +50,21 @@ if '-h' in myargs or len(myargs) == 0:  # Example usage.
     print('\t-s: Process on given string.\n')
 
     exit()
-
-DATA_DIR = myargs['-d']
+if '-d' in myargs:
+    DATA_DIR = myargs['-d']
 
 if '-t' in myargs:
     DOCS_TO_PROCESS = int(myargs['-t'])
 else:
-    DOCS_TO_PROCESS = len([name for name in os.listdir(DATA_DIR) if os.path.isfile(os.path.join(DATA_DIR, name))])
+    if '-d' in myargs:
+        DOCS_TO_PROCESS = len([name for name in os.listdir(DATA_DIR) if os.path.isfile(os.path.join(DATA_DIR, name))])
 
 if '-s' in myargs:
     
     sentence = myargs['-s']
-    result = process_data(sentence)
 
+    print('\nProcessing on example sentence :', sentence)
+    result = process_data(sentence)
     print("result", result)
 
     exit()
