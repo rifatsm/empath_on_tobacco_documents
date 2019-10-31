@@ -11,14 +11,69 @@ article = "Why do you hate it"
 # categories total: 
 
 import operator
+import os
+from sys import argv
 from empath import Empath
-lexicon = Empath()
-# Store all the emotions
-# result = lexicon.analyze(article, categories=['positive_emotion','negative_emotion'])
-result = lexicon.analyze(article, normalize=True)
-# Keeping only the non.zero valued items
-result = {x:y for x,y in result.items() if y!=0.0}
-# Sort the emotions based on their probability
-result = sorted(result.items(), key=operator.itemgetter(1), reverse=True)
 
-print(result)
+def getopts(argv):
+    opts = {}  # Empty dictionary to store key-value pairs.
+    while argv:  # While there are arguments left to parse...
+        if argv[0][0] == '-' and argv[0][1] != 'h':  # Found a "-name value" pair.
+            opts[argv[0]] = argv[1]  # Add key and value to the dictionary.
+        argv = argv[1:]  # Reduce the argument list by copying it starting from index 1.
+    return opts
+
+def process_data(data, categories = None, normalize=True):
+    # Store all the emotions
+    if categories is None:
+        result = lexicon.analyze(data, normalize=normalize)
+    else:
+        result = lexicon.analyze(data, categories=categories, normalize=normalize)
+    # Keeping only the non.zero valued items
+    result = {x:y for x,y in result.items() if y!=0.0}
+    # Sort the emotions based on their probability
+    return sorted(result.items(), key=operator.itemgetter(1), reverse=True)
+
+lexicon = Empath()
+
+myargs = getopts(argv)
+if '-h' in myargs or len(myargs) == 0:  # Example usage.
+
+    print('\nProcessing on example sentence : "Why do you hate it" ')
+    result = process_data(article)
+    print("result", result)
+
+    print('\n\nUsage: python test_empath.py -d data_directory_path -t[optional] number_of_files -s[optional][used alone] "test sentence here" ')
+    print('\t-d: Specify data directory path')
+    print('\t-t: Number of documents to be processed from the directory')
+    print('\t-h: To see this help page again.')
+    print('\t-s: Process on given string.\n')
+
+    exit()
+
+DATA_DIR = myargs['-d']
+
+if '-t' in myargs:
+    DOCS_TO_PROCESS = int(myargs['-t'])
+else:
+    DOCS_TO_PROCESS = len([name for name in os.listdir(DATA_DIR) if os.path.isfile(os.path.join(DATA_DIR, name))])
+
+if '-s' in myargs:
+    
+    sentence = myargs['-s']
+    result = process_data(sentence)
+
+    print("result", result)
+
+    exit()
+
+categories = ['hate','fear','joy','envy','love', 'surprise']
+for i, file_name in enumerate(os.listdir(DATA_DIR)):
+
+    file_path = os.path.join(DATA_DIR, file_name)
+    file = open(file_path, 'r')
+    data = file.read().replace('\n', ' ')
+    result = process_data(data, categories,True)
+    print(result)
+    if i == DOCS_TO_PROCESS-1:
+        break
