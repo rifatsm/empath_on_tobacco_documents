@@ -74,6 +74,6 @@ for i, file_name in enumerate(os.listdir(DATA_DIR)):
     file = open(file_path, 'r')
     data = file.read().replace('\n', ' ')
     result = process_data(data, categories,True)
-    print(result)
+    print(file_name, "\n", result)
     if i == DOCS_TO_PROCESS-1:
         break
