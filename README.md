@@ -1,9 +1,8 @@
 # empath_on_tobacco_documents
-======
 
 ## Running the file
 
-'''
+```
 **python test_empath.py [options]**
 
 The available options are as follows :
@@ -20,4 +19,4 @@ eg. python test_empath.py -d "directory_path" -t n, where n is some integer
 -h: To see help page.
 eg. python test_empath
 
-'''
+```
