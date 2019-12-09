@@ -32,9 +32,12 @@ def process_data(data, categories = None, normalize=True):
     else:
         result = lexicon.analyze(data, categories=categories, normalize=normalize)
     # Keeping only the non.zero valued items
-    result = {x:y for x,y in result.items() if y!=0.0}
-    # Sort the emotions based on their probability
-    return sorted(result.items(), key=operator.itemgetter(1), reverse=True)
+    if result != None:
+        result = {x:y for x,y in result.items() if y!=0.0}
+        # Sort the emotions based on their probability
+        return sorted(result.items(), key=operator.itemgetter(1), reverse=True)
+    else:
+        return []
 
 lexicon = Empath()
 
@@ -73,7 +76,7 @@ if '-s' in myargs:
 
 categories = ['hate','fear','joy','envy','love', 'surprise', 'positive_emotion', 'negative_emotion']
 for i, file_name in enumerate(os.listdir(DATA_DIR)):
-    print(file_name)
+
     file_path = os.path.join(DATA_DIR, file_name)
     file = open(file_path, 'r')
     data = file.read().replace('\n', ' ')
