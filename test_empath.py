@@ -14,6 +14,8 @@ import operator
 import os
 from sys import argv
 from empath import Empath
+import json
+from pathlib import Path
 
 def getopts(argv):
     opts = {}  # Empty dictionary to store key-value pairs.
@@ -69,13 +71,19 @@ if '-s' in myargs:
 
     exit()
 
-categories = ['hate','fear','joy','envy','love', 'surprise']
+categories = ['hate','fear','joy','envy','love', 'surprise', 'positive_emotion', 'negative_emotion']
 for i, file_name in enumerate(os.listdir(DATA_DIR)):
-
+    print(file_name)
     file_path = os.path.join(DATA_DIR, file_name)
     file = open(file_path, 'r')
     data = file.read().replace('\n', ' ')
     result = process_data(data, categories,True)
     print(file_name, "\n", result)
+
+    respath="SentimentAnalysis/"+file_name+".txt"
+    f2= open(respath,"w+")
+    f2.write(str(result))
+    f2.close()
+
     if i == DOCS_TO_PROCESS-1:
         break

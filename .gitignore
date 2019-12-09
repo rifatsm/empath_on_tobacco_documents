@@ -1,2 +1,5 @@
 data/
 .vscode/
+SentimentAnalysis/
+*.zip
+CEPH_data
